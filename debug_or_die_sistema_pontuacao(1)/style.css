@@ -11,8 +11,8 @@ html,
 body {
     width: 100%;
     min-height: 100%;
-    background: #0d1117;
-    color: #00ffcc;
+    background: #090612;
+    color: #00ff88;
 }
 
 body {
@@ -31,7 +31,7 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: 1;
-    opacity: 0.25;
+    opacity: 0.45; /* Aumentado para o Matrix aparecer mais forte */
     pointer-events: none;
 }
 
@@ -70,8 +70,8 @@ body {
 
 .title-cyan,
 .title-cyan-gigante {
-    color: #00ffcc;
-    text-shadow: 3px 3px #ff007f;
+    color: #00ff88;
+    text-shadow: 3px 3px #9d00ff;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -86,7 +86,8 @@ body {
 }
 
 .title-magenta {
-    color: #ff007f;
+    color: #b845ff;
+    text-shadow: 3px 3px #00ff88;
     font-size: 18px;
     text-align: center;
     margin-bottom: 20px;
@@ -94,7 +95,7 @@ body {
 }
 
 .subtitle {
-    color: #9ca3af;
+    color: #a78bfa;
     font-size: 10px;
     text-align: center;
     line-height: 1.8;
@@ -109,8 +110,8 @@ select {
     width: 100%;
     max-width: 380px;
     padding: 14px;
-    background: #111827;
-    border: 3px solid #00ffcc;
+    background: #130b26;
+    border: 3px solid #00ff88;
     color: #ffffff;
     font-size: 10px;
     margin-bottom: 15px;
@@ -120,22 +121,22 @@ select {
 
 input:focus,
 select:focus {
-    border-color: #ff007f;
-    box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+    border-color: #b845ff;
+    box-shadow: 0 0 10px rgba(184, 69, 255, 0.4);
 }
 
 input::placeholder {
-    color: #9ca3af;
+    color: #6b588c;
 }
 
 /* BOTÕES */
 
 .pixel-btn,
 .fifa-arrow {
-    background: #111827;
-    color: #00ffcc;
-    border: 3px solid #00ffcc;
-    box-shadow: 4px 4px #ff007f;
+    background: #130b26;
+    color: #00ff88;
+    border: 3px solid #00ff88;
+    box-shadow: 4px 4px #9d00ff;
     padding: 14px;
     font-size: 10px;
     cursor: pointer;
@@ -153,14 +154,14 @@ input::placeholder {
 
 .pixel-btn:hover,
 .fifa-arrow:hover {
-    background: #00ffcc;
-    color: #0d1117;
+    background: #00ff88;
+    color: #090612;
 }
 
 .pixel-btn:active,
 .fifa-arrow:active {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px #ff007f;
+    box-shadow: 2px 2px #9d00ff;
 }
 
 .pixel-btn:disabled {
@@ -171,9 +172,14 @@ input::placeholder {
 }
 
 .btn-purple {
-    border-color: #ff007f;
-    color: #ff007f;
-    box-shadow: 4px 4px #00ffcc;
+    border-color: #b845ff;
+    color: #b845ff;
+    box-shadow: 4px 4px #00ff88;
+}
+
+.btn-purple:hover {
+    background: #b845ff;
+    color: #090612;
 }
 
 /* MENU */
@@ -188,7 +194,7 @@ input::placeholder {
 }
 
 .config-box label {
-    color: #00ffcc;
+    color: #00ff88;
     font-size: 9px;
     line-height: 1.8;
     margin: 12px 0 8px;
@@ -209,7 +215,7 @@ input::placeholder {
 
 .toggle-history-btn {
     font-size: 9px;
-    border-color: #ff007f;
+    border-color: #b845ff;
     box-shadow: none;
 }
 
@@ -218,8 +224,8 @@ input::placeholder {
     overflow: hidden;
     transition: max-height 0.3s ease;
     width: 100%;
-    background: #111827;
-    border: 2px solid #00ffcc;
+    background: #130b26;
+    border: 2px solid #00ff88;
     border-top: none;
 }
 
@@ -237,7 +243,7 @@ input::placeholder {
 
 .history-table th,
 .history-table td {
-    border: 1px solid #374151;
+    border: 1px solid #3b2361;
     padding: 10px 5px;
     text-align: center;
 }
@@ -247,8 +253,8 @@ input::placeholder {
 .terminal-box {
     width: 100%;
     max-width: 500px;
-    background: #111827;
-    border: 3px solid #00ffcc;
+    background: #130b26;
+    border: 3px solid #00ff88;
     padding: 20px;
     margin-bottom: 20px;
     text-align: center;
@@ -257,7 +263,7 @@ input::placeholder {
 }
 
 .tutorial-title {
-    color: #ff007f;
+    color: #b845ff;
     margin: 18px 0 8px;
 }
 
@@ -276,7 +282,7 @@ input::placeholder {
 
 .custom-name-box label {
     display: block;
-    color: #00ffaa;
+    color: #00ff88;
     font-size: 9px;
     margin-bottom: 10px;
 }
@@ -284,9 +290,9 @@ input::placeholder {
 .fifa-card {
     width: 100%;
     max-width: 380px;
-    background: linear-gradient(135deg, #1e1b4b, #312e81);
-    border: 4px solid #00ffcc;
-    box-shadow: 6px 6px #ff007f;
+    background: linear-gradient(135deg, #1f103d, #130b26);
+    border: 4px solid #00ff88;
+    box-shadow: 6px 6px #9d00ff;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -296,7 +302,7 @@ input::placeholder {
 
 .fifa-title {
     font-size: 14px;
-    color: #00ffcc;
+    color: #00ff88;
     margin-bottom: 15px;
     text-align: center;
     line-height: 1.5;
@@ -315,8 +321,8 @@ input::placeholder {
     width: 140px;
     height: 140px;
     object-fit: contain;
-    border: 3px solid #ff007f;
-    background: #111827;
+    border: 3px solid #b845ff;
+    background: #090612;
     image-rendering: pixelated;
 }
 
@@ -327,14 +333,14 @@ input::placeholder {
 
 .fifa-footer {
     width: 100%;
-    background: #111827;
-    border: 2px solid #00ffcc;
+    background: #090612;
+    border: 2px solid #00ff88;
     padding: 12px;
 }
 
 .fifa-footer p {
     font-size: 8px;
-    color: #d1d5db;
+    color: #a78bfa;
     line-height: 1.7;
 }
 
@@ -345,7 +351,7 @@ input::placeholder {
 }
 
 .reveal-box p {
-    color: #00ffcc;
+    color: #00ff88;
     font-size: 9px;
     margin-bottom: 18px;
 }
@@ -366,7 +372,7 @@ input::placeholder {
 }
 
 .voting-player-title {
-    color: #00ffcc;
+    color: #00ff88;
     font-size: clamp(10px, 1.5vw, 13px);
     line-height: 1.8;
     margin-bottom: 20px;
@@ -382,8 +388,8 @@ input::placeholder {
 
 .vote-card {
     min-width: 0;
-    background: #111827;
-    border: 3px solid #374151;
+    background: #130b26;
+    border: 3px solid #3b2361;
     padding: 16px 10px;
     color: #ffffff;
     cursor: pointer;
@@ -401,7 +407,7 @@ input::placeholder {
     max-width: 100%;
     object-fit: contain;
     image-rendering: pixelated;
-    background: #0d1117;
+    background: #090612;
 }
 
 .vote-card span {
@@ -411,18 +417,18 @@ input::placeholder {
 }
 
 .vote-card:hover {
-    border-color: #00ffcc;
+    border-color: #00ff88;
     transform: translateY(-2px);
 }
 
 .vote-card.selected {
-    border-color: #ff007f;
-    background: #252044;
-    box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
+    border-color: #b845ff;
+    background: #251347;
+    box-shadow: 0 0 12px rgba(184, 69, 255, 0.5);
 }
 
 .vote-card.selected span {
-    color: #ff007f;
+    color: #b845ff;
 }
 
 /* RESULTADO */
@@ -432,28 +438,28 @@ input::placeholder {
 }
 
 .result-box h2 {
-    color: #ff007f;
+    color: #b845ff;
     font-size: 18px;
     margin: 12px 0;
 }
 
 .text-success {
-    color: #00ffcc;
+    color: #00ff88;
     margin-top: 12px;
 }
 
 .text-danger {
-    color: #ff007f;
+    color: #b845ff;
     margin-top: 12px;
 }
 
 .points-title {
-    color: #00ffcc;
+    color: #00ff88;
     margin-bottom: 12px;
 }
 
 .guess-box h2 {
-    color: #ff007f;
+    color: #b845ff;
     font-size: 13px;
     line-height: 1.8;
     margin-bottom: 15px;
@@ -467,18 +473,18 @@ input::placeholder {
 
 .word-reveal {
     margin-top: 20px;
-    border: 2px solid #00ffcc;
+    border: 2px solid #00ff88;
     padding: 15px;
-    background: #0d1117;
+    background: #090612;
 }
 
 .word-reveal p {
-    color: #00ffcc;
+    color: #00ff88;
     font-size: 8px;
 }
 
 .word-reveal h2 {
-    color: #ff007f;
+    color: #b845ff;
     font-size: 18px;
     overflow-wrap: anywhere;
 }
@@ -496,8 +502,8 @@ input::placeholder {
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    background: #111827;
-    border: 2px solid #374151;
+    background: #130b26;
+    border: 2px solid #3b2361;
     padding: 16px 12px;
     margin-bottom: 10px;
     font-size: 9px;
@@ -505,17 +511,17 @@ input::placeholder {
 }
 
 .score-line strong {
-    color: #00ffcc;
+    color: #00ff88;
     white-space: nowrap;
 }
 
 .score-line.winner {
-    border-color: #ff007f;
-    box-shadow: 3px 3px #00ffcc;
+    border-color: #b845ff;
+    box-shadow: 3px 3px #00ff88;
 }
 
 .score-line.winner strong {
-    color: #ff007f;
+    color: #b845ff;
 }
 
 /* CONTAGEM REGRESSIVA */
@@ -525,7 +531,7 @@ input::placeholder {
     inset: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(13, 17, 23, 0.96);
+    background: rgba(9, 6, 18, 0.96);
     z-index: 100;
     display: flex;
     justify-content: center;
@@ -541,15 +547,15 @@ input::placeholder {
     width: 100%;
     max-width: 420px;
     text-align: center;
-    border: 5px solid #ff007f;
-    background: #111827;
+    border: 5px solid #b845ff;
+    background: #130b26;
     padding: 35px 20px;
-    box-shadow: 6px 6px #00ffcc;
+    box-shadow: 6px 6px #00ff88;
 }
 
 .countdown-content h2 {
     font-size: 13px;
-    color: #00ffcc;
+    color: #00ff88;
     line-height: 1.8;
 }
 
@@ -560,8 +566,8 @@ input::placeholder {
 
 #timer-number {
     font-size: 64px;
-    color: #ff007f;
-    text-shadow: 4px 4px #00ffcc;
+    color: #b845ff;
+    text-shadow: 4px 4px #00ff88;
     margin: 20px 0;
 }
 
@@ -573,15 +579,15 @@ input::placeholder {
     right: 10px;
     z-index: 20;
     font-size: 8px;
-    color: rgba(0, 255, 204, 0.4);
+    color: rgba(0, 255, 136, 0.4);
 }
 
 /* PASS SCREEN PLAYER NAME */
 
 #vote-pass-player-name {
-    color: #00ffcc;
+    color: #00ff88;
     font-size: clamp(14px, 3vw, 20px);
-    text-shadow: 2px 2px #ff007f;
+    text-shadow: 2px 2px #b845ff;
     margin: 15px 0;
     overflow-wrap: anywhere;
 }

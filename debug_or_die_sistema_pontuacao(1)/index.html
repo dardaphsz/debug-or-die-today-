@@ -10,6 +10,40 @@
 </head>
 <body>
 
+    <!-- BOTÃO DE CONFIGURAÇÕES FLUTUANTE -->
+    <button id="settings-trigger-btn" class="settings-trigger-btn" onclick="abrirModalConfig()">⚙️</button>
+
+    <!-- MODAL DE CONFIGURAÇÕES RÁPIDAS -->
+    <div id="game-settings-modal" class="overlay hidden">
+        <!-- TELA 1: OPÇÕES -->
+        <div id="settings-main-view" class="countdown-content settings-modal-box">
+            <h2>MENU RÁPIDO</h2>
+            <p>O QUE DESEJA FAZER?</p>
+            
+            <button class="pixel-btn" onclick="mostrarConfirmacaoSaida()">
+                > VOLTAR AO MENU
+            </button>
+            
+            <button class="pixel-btn btn-purple" onclick="fecharModalConfig()">
+                [ RETORNAR AO JOGO ]
+            </button>
+        </div>
+
+        <!-- TELA 2: CONFIRMAÇÃO DE SAÍDA -->
+        <div id="settings-confirm-view" class="countdown-content settings-modal-box hidden">
+            <h2>ATENÇÃO!</h2>
+            <p>DESEJA REALMENTE SAIR? O PROGRESSO ATUAL SERÁ PERDIDO.</p>
+            
+            <button class="pixel-btn" onclick="retornarAoMenuPrincipal()">
+                > SIM, SAIR
+            </button>
+            
+            <button class="pixel-btn btn-purple" onclick="voltarMenuPrincipalConfig()">
+                [ CANCELAR ]
+            </button>
+        </div>
+    </div>
+
     <canvas id="matrix-canvas"></canvas>
 
     <main class="app-container">
@@ -38,6 +72,9 @@
                     <option value="5">5 Jogadores</option>
                     <option value="6">6 Jogadores</option>
                     <option value="7">7 Jogadores</option>
+                    <option value="8">8 Jogadores</option>
+                    <option value="9">9 Jogadores</option>
+                    <option value="10">10 Jogadores</option>
                 </select>
 
                 <label for="select-qtd-rodadas">QUANTIDADE DE RODADAS:</label>
@@ -62,26 +99,9 @@
                     [ LOGOUT ]
                 </button>
             </div>
-
-            <div class="history-area">
-                <button class="pixel-btn toggle-history-btn" onclick="toggleLogs()">
-                    <span id="log-arrow">▼</span> HISTÓRICO DE PARTIDAS
-                </button>
-
-                <div id="logs-container">
-                    <table class="history-table">
-                        <thead>
-                            <tr>
-                                <th>VENCEDOR</th>
-                                <th>PONTOS</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-rows"></tbody>
-                    </table>
-                </div>
-            </div>
         </section>
 
+        <!-- TUTORIAL -->
         <!-- TUTORIAL -->
         <section id="screen-tutorial" class="screen">
             <h1 class="title-magenta">MANUAL DO SISTEMA</h1>
@@ -94,16 +114,16 @@
                 <p>Todos os desenvolvedores recebem a mesma palavra secreta. O impostor recebe uma palavra diferente.</p>
 
                 <p class="tutorial-title">3. VOTAÇÃO</p>
-                <p>Depois do debate, cada jogador vota em quem acredita ser o impostor.</p>
+                <p>Depois do debate, cada jogador vota em quem acredita ser o impostor. Para ser descoberto, o impostor precisa receber a maioria absoluta dos votos (mais da metade do total de jogadores) sem empate.</p>
 
                 <p class="tutorial-title">4. PONTUAÇÃO</p>
-                <p>Quem votar corretamente recebe 4 pontos quando a maioria descobrir o impostor. Se a maioria errar, o impostor recebe 5 pontos.</p>
+                <p>Se a maioria descobrir o impostor, cada jogador que votou nele ganha <strong>+4 pontos</strong>. Se o impostor escapar (ou houver empate/falta de maioria), o impostor ganha <strong>+5 pontos</strong> e quem acertou o voto ganha <strong>+2 pontos</strong>.</p>
 
                 <p class="tutorial-title">5. PALPITE FINAL</p>
-                <p>Depois da votação, o impostor tenta adivinhar a palavra dos desenvolvedores. Se acertar, ganha 3 pontos extras.</p>
+                <p>Depois da votação, o impostor tenta adivinhar a palavra dos desenvolvedores. Se acertar, ganha <strong>+3 pontos extras</strong>.</p>
             </div>
 
-            <button class="pixel-btn" onclick="irParaTela('screen-menu')">
+            <button type="button" class="pixel-btn" onclick="irParaTela('screen-menu')">
                 VOLTAR AO MENU
             </button>
         </section>

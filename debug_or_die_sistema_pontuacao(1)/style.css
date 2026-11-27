@@ -16,12 +16,12 @@ body {
 }
 
 body {
-    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
-    padding: 20px 0;
+    padding: clamp(10px, 2vw, 24px);
 }
 
 #matrix-canvas {
@@ -31,7 +31,7 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: 1;
-    opacity: 0.45; /* Aumentado para o Matrix aparecer mais forte */
+    opacity: 0.45;
     pointer-events: none;
 }
 
@@ -39,13 +39,13 @@ body {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 1100px;
-    min-height: 100vh;
+    max-width: 1200px;
+    min-height: calc(100dvh - 24px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: clamp(15px, 3vw, 40px);
+    padding: clamp(12px, 2.5vw, 32px);
 }
 
 .screen {
@@ -56,6 +56,7 @@ body {
     width: 100%;
     text-align: center;
     margin: auto;
+    gap: clamp(8px, 1.5vh, 16px);
 }
 
 .screen.active {
@@ -67,54 +68,60 @@ body {
 }
 
 /* TÍTULOS */
-
 .title-cyan,
 .title-cyan-gigante {
     color: #00ff88;
     text-shadow: 3px 3px #9d00ff;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: clamp(8px, 1.5vh, 18px);
 }
 
 .title-cyan {
-    font-size: 18px;
+    font-size: clamp(15px, 2.5vw, 21px);
+    line-height: 1.4;
 }
 
 .title-cyan-gigante {
-    font-size: clamp(22px, 5vw, 36px);
-    line-height: 1.5;
+    font-size: clamp(20px, 4.4vw, 36px);
+    line-height: 1.4;
 }
 
 .title-magenta {
     color: #b845ff;
     text-shadow: 3px 3px #00ff88;
-    font-size: 18px;
+    font-size: clamp(16px, 2.8vw, 22px);
     text-align: center;
-    margin-bottom: 20px;
-    line-height: 1.5;
+    margin-bottom: clamp(6px, 1.2vh, 14px);
+    line-height: 1.4;
 }
 
 .subtitle {
     color: #a78bfa;
-    font-size: 10px;
+    font-size: clamp(9px, 1.35vw, 11px);
     text-align: center;
-    line-height: 1.8;
-    margin-bottom: 22px;
+    line-height: 1.6;
+    margin-bottom: clamp(8px, 1.4vh, 18px);
     width: 100%;
 }
 
-/* CAMPOS */
+.voting-player-title {
+    color: #00ff88;
+    font-size: clamp(10px, 1.6vw, 13px);
+    line-height: 1.5;
+    margin-bottom: clamp(10px, 1.4vh, 16px);
+}
 
+/* CAMPOS */
 input,
 select {
     width: 100%;
-    max-width: 380px;
-    padding: 14px;
+    max-width: min(400px, 92vw);
+    padding: clamp(10px, 1.5vh, 14px);
     background: #130b26;
     border: 3px solid #00ff88;
     color: #ffffff;
-    font-size: 10px;
-    margin-bottom: 15px;
+    font-size: clamp(9px, 1.3vw, 11px);
+    margin-bottom: clamp(10px, 1.5vh, 15px);
     text-align: center;
     outline: none;
 }
@@ -129,16 +136,15 @@ input::placeholder {
     color: #6b588c;
 }
 
-/* BOTÕES */
-
+/* BOTÕES ADAPTÁVEIS */
 .pixel-btn,
 .fifa-arrow {
     background: #130b26;
     color: #00ff88;
     border: 3px solid #00ff88;
     box-shadow: 4px 4px #9d00ff;
-    padding: 14px;
-    font-size: 10px;
+    padding: clamp(11px, 1.5vh, 15px) clamp(14px, 2vw, 20px);
+    font-size: clamp(9px, 1.3vw, 11px);
     cursor: pointer;
     text-align: center;
     transition: 0.15s;
@@ -147,9 +153,9 @@ input::placeholder {
 
 .pixel-btn {
     width: 100%;
-    max-width: 380px;
-    margin: 8px 0;
-    line-height: 1.6;
+    max-width: min(440px, 92vw);
+    margin: clamp(5px, 0.8vh, 8px) 0;
+    line-height: 1.5;
 }
 
 .pixel-btn:hover,
@@ -183,11 +189,10 @@ input::placeholder {
 }
 
 /* MENU */
-
 .config-box {
     width: 100%;
-    max-width: 380px;
-    margin-bottom: 15px;
+    max-width: min(380px, 92vw);
+    margin-bottom: clamp(10px, 1.5vh, 15px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -195,76 +200,35 @@ input::placeholder {
 
 .config-box label {
     color: #00ff88;
-    font-size: 9px;
-    line-height: 1.8;
-    margin: 12px 0 8px;
+    font-size: clamp(8px, 1.2vw, 9px);
+    line-height: 1.6;
+    margin: clamp(8px, 1.2vh, 12px) 0 clamp(4px, 0.8vh, 8px);
 }
 
 .menu-buttons {
     width: 100%;
-    max-width: 380px;
+    max-width: min(380px, 92vw);
     display: flex;
     flex-direction: column;
-}
-
-.history-area {
-    width: 100%;
-    max-width: 380px;
-    margin-top: 20px;
-}
-
-.toggle-history-btn {
-    font-size: 9px;
-    border-color: #b845ff;
-    box-shadow: none;
-}
-
-#logs-container {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    width: 100%;
-    background: #130b26;
-    border: 2px solid #00ff88;
-    border-top: none;
-}
-
-#logs-container.show {
-    max-height: 250px;
-    padding: 10px;
-    overflow-y: auto;
-}
-
-.history-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 8px;
-}
-
-.history-table th,
-.history-table td {
-    border: 1px solid #3b2361;
-    padding: 10px 5px;
-    text-align: center;
+    align-items: center;
 }
 
 /* TUTORIAL E CAIXAS */
-
 .terminal-box {
     width: 100%;
-    max-width: 500px;
+    max-width: min(680px, 94vw);
     background: #130b26;
     border: 3px solid #00ff88;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: clamp(12px, 2vw, 24px);
+    margin-bottom: clamp(10px, 1.5vh, 20px);
     text-align: center;
-    font-size: 10px;
-    line-height: 1.8;
+    font-size: clamp(8px, 1.25vw, 11px);
+    line-height: 1.7;
 }
 
 .tutorial-title {
     color: #b845ff;
-    margin: 18px 0 8px;
+    margin: clamp(10px, 1.6vh, 18px) 0 clamp(4px, 0.8vh, 8px);
 }
 
 .tutorial-title:first-child {
@@ -272,40 +236,39 @@ input::placeholder {
 }
 
 /* SELEÇÃO DE PERSONAGEM */
-
 .custom-name-box {
     width: 100%;
-    max-width: 380px;
-    margin-bottom: 10px;
+    max-width: min(380px, 92vw);
+    margin-bottom: 8px;
     text-align: center;
 }
 
 .custom-name-box label {
     display: block;
     color: #00ff88;
-    font-size: 9px;
-    margin-bottom: 10px;
+    font-size: clamp(8px, 1.2vw, 9px);
+    margin-bottom: 8px;
 }
 
 .fifa-card {
     width: 100%;
-    max-width: 380px;
+    max-width: min(440px, 92vw);
     background: linear-gradient(135deg, #1f103d, #130b26);
     border: 4px solid #00ff88;
     box-shadow: 6px 6px #9d00ff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    margin: 10px 0 20px;
+    padding: clamp(14px, 2vw, 20px);
+    margin: 8px 0 clamp(12px, 1.8vh, 20px);
 }
 
 .fifa-title {
-    font-size: 14px;
+    font-size: clamp(11px, 1.8vw, 14px);
     color: #00ff88;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .fifa-body {
@@ -313,13 +276,13 @@ input::placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: clamp(8px, 2vw, 15px);
+    margin-bottom: 12px;
 }
 
 .fifa-body img {
-    width: 140px;
-    height: 140px;
+    width: clamp(96px, 20vw, 165px);
+    height: clamp(96px, 20vw, 165px);
     object-fit: contain;
     border: 3px solid #b845ff;
     background: #090612;
@@ -327,154 +290,220 @@ input::placeholder {
 }
 
 .fifa-arrow {
-    padding: 12px;
-    font-size: 14px;
+    padding: clamp(8px, 1.4vw, 12px);
+    font-size: clamp(11px, 1.8vw, 14px);
 }
 
 .fifa-footer {
     width: 100%;
     background: #090612;
     border: 2px solid #00ff88;
-    padding: 12px;
+    padding: clamp(8px, 1.4vw, 12px);
 }
 
 .fifa-footer p {
-    font-size: 8px;
+    font-size: clamp(7px, 1.1vw, 8px);
     color: #a78bfa;
-    line-height: 1.7;
+    line-height: 1.6;
 }
 
 /* REVELAÇÃO */
-
 .reveal-box {
-    padding: 30px 15px;
+    padding: clamp(18px, 3vh, 30px) 15px;
 }
 
 .reveal-box p {
     color: #00ff88;
-    font-size: 9px;
-    margin-bottom: 18px;
+    font-size: clamp(8px, 1.2vw, 9px);
+    margin-bottom: 14px;
 }
 
 #secret-word-box {
-    min-height: 45px;
-    font-size: clamp(15px, 4vw, 22px);
+    min-height: 40px;
+    font-size: clamp(14px, 3.5vw, 22px);
     color: #ffffff;
-    line-height: 1.5;
+    line-height: 1.4;
     overflow-wrap: anywhere;
 }
 
-/* VOTAÇÃO COM FOTOS */
-
+/* VOTAÇÃO COM FOTOS (AUTO-ADAPTÁVEL PARA QUALQUER QUANTIDADE DE JOGADORES) */
 .voting-container {
     width: 100%;
-    max-width: 900px;
-}
-
-.voting-player-title {
-    color: #00ff88;
-    font-size: clamp(10px, 1.5vw, 13px);
-    line-height: 1.8;
-    margin-bottom: 20px;
+    max-width: min(1140px, 96vw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .voting-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
+    --card-basis: clamp(160px, 23vw, 235px);
+    --card-max-w: clamp(185px, 27vw, 265px);
+    --card-min-h: clamp(165px, 25dvh, 240px);
+    --card-max-h: 31dvh;
+    --sprite-size: clamp(86px, 16.5dvh, 155px);
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: clamp(12px, 1.8vw, 24px);
     width: 100%;
-    margin-bottom: 24px;
+    margin: clamp(8px, 1.2vh, 14px) auto clamp(12px, 1.8vh, 22px);
+}
+
+/* Poucos alvos (ex: 3 jogadores = 2 cards): maiores e bem centralizados */
+.voting-cards[data-count="2"] {
+    max-width: min(740px, 94vw);
+    --card-basis: clamp(220px, 32vw, 310px);
+    --card-max-w: clamp(240px, 35vw, 330px);
+    --card-min-h: clamp(210px, 32dvh, 290px);
+    --card-max-h: 38dvh;
+    --sprite-size: clamp(118px, 22dvh, 200px);
+}
+
+/* 4 jogadores = 3 cards: equilibrados e centralizados */
+.voting-cards[data-count="3"] {
+    max-width: min(920px, 95vw);
+    --card-basis: clamp(190px, 26vw, 260px);
+    --card-max-w: clamp(210px, 29vw, 280px);
+    --card-min-h: clamp(185px, 28dvh, 255px);
+    --card-max-h: 34dvh;
+    --sprite-size: clamp(102px, 19dvh, 175px);
+}
+
+/* 5 jogadores = 4 cards: 2x2 centralizado */
+.voting-cards[data-count="4"] {
+    max-width: min(680px, 94vw);
+    --card-basis: clamp(180px, 25vw, 250px);
+    --card-max-w: clamp(200px, 28vw, 270px);
+    --card-min-h: clamp(170px, 24dvh, 230px);
+    --card-max-h: 30dvh;
+    --sprite-size: clamp(92px, 16.5dvh, 155px);
+}
+
+/* 6–7 jogadores = 5–6 cards: avatares grandes com ajuste automático */
+.voting-cards[data-count="5"],
+.voting-cards[data-count="6"] {
+    max-width: min(940px, 95vw);
+    --card-basis: clamp(158px, 22vw, 225px);
+    --card-max-w: clamp(178px, 25vw, 245px);
+    --card-min-h: clamp(150px, 22dvh, 210px);
+    --card-max-h: 27dvh;
+    --sprite-size: clamp(80px, 14.5dvh, 138px);
+}
+
+/* 8–10 jogadores = 7–9 cards: ajuste automático para manter tudo balanceado */
+.voting-cards[data-count="7"],
+.voting-cards[data-count="8"],
+.voting-cards[data-count="9"] {
+    max-width: min(1040px, 96vw);
+    gap: clamp(10px, 1.3vw, 16px);
+    --card-basis: clamp(138px, 19vw, 195px);
+    --card-max-w: clamp(155px, 22vw, 215px);
+    --card-min-h: clamp(130px, 19dvh, 175px);
+    --card-max-h: 24dvh;
+    --sprite-size: clamp(68px, 12.5dvh, 118px);
 }
 
 .vote-card {
-    min-width: 0;
+    flex: 1 1 var(--card-basis);
+    width: auto;
+    max-width: var(--card-max-w);
+    min-width: 100px;
+    min-height: var(--card-min-h);
+    max-height: var(--card-max-h);
     background: #130b26;
     border: 3px solid #3b2361;
-    padding: 16px 10px;
+    padding: clamp(8px, 1.1vw, 12px);
     color: #ffffff;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: clamp(6px, 0.9vh, 10px);
     transition: 0.15s;
-}
-
-.vote-card img {
-    width: clamp(80px, 12vw, 120px);
-    height: clamp(80px, 12vw, 120px);
-    max-width: 100%;
-    object-fit: contain;
-    image-rendering: pixelated;
-    background: #090612;
-}
-
-.vote-card span {
-    font-size: 9px;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
 }
 
 .vote-card:hover {
     border-color: #00ff88;
-    transform: translateY(-2px);
+    background: #1a0f3a;
 }
 
 .vote-card.selected {
-    border-color: #b845ff;
-    background: #251347;
-    box-shadow: 0 0 12px rgba(184, 69, 255, 0.5);
+    border-color: #00ff88 !important;
+    background: #1a0f3a !important;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.45);
 }
 
-.vote-card.selected span {
-    color: #b845ff;
+.vote-card img {
+    width: var(--sprite-size);
+    height: var(--sprite-size);
+    max-width: 82%;
+    max-height: 78%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    background: #090612;
+    border: 2px solid #3b2361;
+    flex-shrink: 1;
+}
+
+.vote-card span {
+    font-size: clamp(8px, 1.2vw, 10px);
+    line-height: 1.35;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    flex-shrink: 0;
 }
 
 /* RESULTADO */
-
 .result-box {
-    line-height: 2;
+    line-height: 1.8;
 }
 
 .result-box h2 {
     color: #b845ff;
-    font-size: 18px;
-    margin: 12px 0;
+    font-size: clamp(14px, 2.4vw, 18px);
+    margin: 10px 0;
 }
 
 .text-success {
     color: #00ff88;
-    margin-top: 12px;
+    margin-top: 10px;
 }
 
 .text-danger {
     color: #b845ff;
-    margin-top: 12px;
+    margin-top: 10px;
 }
 
 .points-title {
     color: #00ff88;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .guess-box h2 {
     color: #b845ff;
-    font-size: 13px;
-    line-height: 1.8;
-    margin-bottom: 15px;
-}
-
-.guess-box p {
-    font-size: 9px;
-    line-height: 1.8;
+    font-size: clamp(10px, 1.8vw, 13px);
+    line-height: 1.6;
     margin-bottom: 12px;
 }
 
+.guess-box p {
+    font-size: clamp(8px, 1.2vw, 9px);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
 .word-reveal {
-    margin-top: 20px;
+    margin-top: 14px;
     border: 2px solid #00ff88;
-    padding: 15px;
+    padding: 12px;
     background: #090612;
 }
 
@@ -485,16 +514,18 @@ input::placeholder {
 
 .word-reveal h2 {
     color: #b845ff;
-    font-size: 18px;
+    font-size: clamp(14px, 2.4vw, 18px);
     overflow-wrap: anywhere;
 }
 
 /* PLACAR */
-
 .scoreboard-container {
     width: 100%;
-    max-width: 450px;
-    margin: 10px 0 20px;
+    max-width: min(600px, 92vw);
+    margin: 8px 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6px, 1vh, 10px);
 }
 
 .score-line {
@@ -504,10 +535,9 @@ input::placeholder {
     gap: 10px;
     background: #130b26;
     border: 2px solid #3b2361;
-    padding: 16px 12px;
-    margin-bottom: 10px;
-    font-size: 9px;
-    line-height: 1.7;
+    padding: clamp(10px, 1.5vh, 16px) clamp(10px, 2vw, 16px);
+    font-size: clamp(8px, 1.3vw, 11px);
+    line-height: 1.5;
 }
 
 .score-line strong {
@@ -524,8 +554,17 @@ input::placeholder {
     color: #b845ff;
 }
 
-/* CONTAGEM REGRESSIVA */
+#confetti-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+}
 
+/* CONTAGEM REGRESSIVA */
 .overlay {
     position: fixed;
     inset: 0;
@@ -545,18 +584,18 @@ input::placeholder {
 
 .countdown-content {
     width: 100%;
-    max-width: 420px;
+    max-width: min(420px, 92vw);
     text-align: center;
     border: 5px solid #b845ff;
     background: #130b26;
-    padding: 35px 20px;
+    padding: clamp(20px, 4vh, 35px) 20px;
     box-shadow: 6px 6px #00ff88;
 }
 
 .countdown-content h2 {
-    font-size: 13px;
+    font-size: clamp(11px, 1.8vw, 13px);
     color: #00ff88;
-    line-height: 1.8;
+    line-height: 1.6;
 }
 
 .countdown-content p {
@@ -565,14 +604,13 @@ input::placeholder {
 }
 
 #timer-number {
-    font-size: 64px;
+    font-size: clamp(40px, 9vw, 64px);
     color: #b845ff;
     text-shadow: 4px 4px #00ff88;
-    margin: 20px 0;
+    margin: 16px 0;
 }
 
 /* VERSÃO */
-
 .version-tag {
     position: fixed;
     bottom: 8px;
@@ -592,57 +630,72 @@ input::placeholder {
     overflow-wrap: anywhere;
 }
 
-/* RESPONSIVIDADE PARA TABLETS E DESKTOPS */
-
-@media (min-width: 768px) {
-    .terminal-box {
-        max-width: 680px;
-        padding: 28px;
-        font-size: 11px;
-    }
-
-    .fifa-card {
-        max-width: 440px;
-    }
-
-    .fifa-body img {
-        width: 165px;
-        height: 165px;
-    }
-
-    .scoreboard-container {
-        max-width: 600px;
-    }
-
-    .score-line {
-        font-size: 11px;
-        padding: 18px 16px;
-    }
-}
-
-@media (max-width: 480px) {
+/* AJUSTES PARA TELAS PEQUENAS / BAIXAS (INCLUINDO 7–10 JOGADORES) */
+@media (max-width: 600px) {
     .app-container {
-        padding: 15px;
+        padding: 54px 10px 24px;
     }
 
-    .voting-cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .voting-cards,
+    .voting-cards[data-count] {
+        max-width: 100%;
         gap: 8px;
+        --card-basis: clamp(96px, 29vw, 145px);
+        --card-max-w: 46vw;
+        --card-min-h: clamp(100px, 16dvh, 145px);
+        --card-max-h: 22dvh;
+        --sprite-size: clamp(54px, 10.5dvh, 96px);
     }
 
     .vote-card {
-        padding: 10px 5px;
+        padding: 7px;
+        gap: 4px;
     }
 
     .vote-card span {
-        font-size: 8px;
+        font-size: 7.5px;
     }
+}
 
-    .terminal-box {
-        padding: 15px;
-    }
+/* ESTILOS PARA O BOTÃO E MODAL DE CONFIGURAÇÕES */
+.settings-trigger-btn {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 9999;
+    background: #130b26;
+    color: #00ff88;
+    border: 2px solid #00ff88;
+    width: clamp(34px, 5vw, 42px);
+    height: clamp(34px, 5vw, 42px);
+    font-size: clamp(13px, 2vw, 16px);
+    cursor: pointer;
+    box-shadow: 2px 2px #9d00ff;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    transition: 0.1s;
+}
 
-    .score-line {
-        font-size: 8px;
-    }
+.settings-trigger-btn:hover {
+    background: #00ff88;
+    color: #090612;
+}
+
+.settings-modal-box {
+    max-width: min(340px, 92vw) !important;
+    padding: 22px 16px !important;
+    border-color: #00ff88 !important;
+    box-shadow: 6px 6px #b845ff !important;
+}
+
+.settings-modal-box h2 {
+    font-size: 11px;
+    margin-bottom: 12px;
+}
+
+.settings-modal-box p {
+    font-size: 8px;
+    line-height: 1.6;
+    margin-bottom: 16px;
 }

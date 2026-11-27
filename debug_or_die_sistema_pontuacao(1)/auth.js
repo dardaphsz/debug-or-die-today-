@@ -1,4 +1,3 @@
-// DEBUG OR DIE - lógica de partidas e pontuação
 const SUPABASE_URL = "https://nggaakknmpakjgpdesbj.supabase.co";
 const SUPABASE_KEY = "sb_publishable_6Apvs1hf0fu-hGgKPFgmdw_Zp4QtkvM";
 
@@ -7,8 +6,7 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_KEY
 );
 
-
-//audio
+/*audio*/
 const somTrilha = new Audio("trilha_misterio.mp3");
 somTrilha.loop = true;
 somTrilha.volume = 0.4;
@@ -25,7 +23,7 @@ function iniciarMusicaFundo() {
     somTrilha.play().catch(() => {});
 }
 
-//personagens
+/*personagens*/
 const masterCharactersDatabase = [
     {
         name: "Mathias",
@@ -61,14 +59,25 @@ const masterCharactersDatabase = [
         name: "Marina",
         trait: "Mobile Dev: Criadora de aplicativos multiplataforma.",
         img: "imagens.png/Marina.png"
+    },
+    {
+        name: "Renato",
+        trait: "DevOps Eng: Especialista em pipelines, containers e deploy.",
+        img: "imagens.png/Renato.png"
+    },
+    {
+        name: "Leandro",
+        trait: "QA Engineer: Mestre em testes automatizados e estabilidade.",
+        img: "imagens.png/Leandro.png"
+    },
+    {
+        name: "Madu",
+        trait: "Cloud Arch: Arquiteta de sistemas distribuídos e alta disponibilidade.",
+        img: "imagens.png/Madu.png"
     }
 ];
 
-
-/* =========================================
-   BANCO DE PALAVRAS
-========================================= */
-
+/* BANCO DE PALAVRAS */
 const listaPalavras = [
     { dev: "REACT", impostor: "VUE" },
     { dev: "PYTHON", impostor: "RUBY" },
@@ -188,11 +197,7 @@ function sortearParPalavrasSemRepeticao() {
     return listaPalavras[indiceSorteado];
 }
 
-
-/* =========================================
-   VARIÁVEIS DO JOGO
-========================================= */
-
+/*VARIÁVEIS DO JOGO*/
 let usuarioLogadoEmail = "";
 
 let charactersDatabase = [];
@@ -215,14 +220,22 @@ let votos = [];
 let votePlayerIndex = 0;
 let selectedVoteIndex = null;
 
+let roundResultType = null;
 let guessSubmitted = false;
+let isSaving = false;
 
-
-/* =========================================
-   NAVEGAÇÃO
-========================================= */
-
+/*GERENCIAMENTO DE TELAS E BOTÃO DE CONFIG */
 function irParaTela(id) {
+    const modal = document.getElementById("game-settings-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+    }
+
+    const countdown = document.getElementById("countdown-overlay");
+    if (countdown) {
+        countdown.classList.add("hidden");
+    }
+
     document.querySelectorAll(".screen").forEach(screen => {
         screen.classList.remove("active");
     });
@@ -232,13 +245,163 @@ function irParaTela(id) {
     if (tela) {
         tela.classList.add("active");
     }
+
+    atualizarEstadoBotaoConfig(id);
 }
 
+function atualizarEstadoBotaoConfig(screenId) {
+    let btnConfig = document.getElementById("settings-trigger-btn");
 
-/* =========================================
-   LOGIN E HISTÓRICO
-========================================= */
+    if (!btnConfig) {
+        btnConfig = document.createElement("button");
+        btnConfig.id = "settings-trigger-btn";
+        btnConfig.className = "settings-trigger-btn";
+        btnConfig.innerHTML = "⚙️";
+        btnConfig.onclick = abrirModalConfig;
+        document.body.appendChild(btnConfig);
+    }
 
+    const loginScreen = document.getElementById("screen-login");
+    const isLoginActive = loginScreen && (
+        screenId === "screen-login" ||
+        loginScreen.classList.contains("active") ||
+        window.getComputedStyle(loginScreen).display !== "none"
+    );
+
+    if (isLoginActive) {
+        btnConfig.style.display = "none";
+        fecharModalConfig();
+        return;
+    }
+
+    btnConfig.style.display = "flex";
+
+    if (screenId === "screen-menu") {
+        configurarMenuConfiguracoes("menu");
+    } else {
+        configurarMenuConfiguracoes("jogo");
+    }
+}
+
+function configurarMenuConfiguracoes(tipo) {
+    const modalMainView = document.getElementById("settings-main-view");
+    if (!modalMainView) return;
+
+    if (tipo === "menu") {
+        modalMainView.innerHTML = `
+            <h2>MENU DE PERFIL</h2>
+            <p>Gerencie sua conta e histórico</p>
+            <button type="button" class="pixel-btn btn-purple" onclick="abrirHistoricoNoModal()">VER HISTÓRICO</button>
+            <button type="button" class="pixel-btn" onclick="fecharModalConfig()">[ FECHAR ]</button>
+        `;
+    } else {
+        modalMainView.innerHTML = `
+            <h2>MENU RÁPIDO</h2>
+            <p>O QUE DESEJA FAZER?</p>
+            <button type="button" class="pixel-btn" onclick="mostrarConfirmacaoSaida()">> VOLTAR AO MENU</button>
+            <button type="button" class="pixel-btn btn-purple" onclick="fecharModalConfig()">[ RETORNAR AO JOGO ]</button>
+        `;
+    }
+}
+
+async function abrirHistoricoNoModal() {
+    tocarClique();
+    const modalMainView = document.getElementById("settings-main-view");
+    if (!modalMainView) return;
+
+    modalMainView.innerHTML = `
+        <h2>HISTÓRICO</h2>
+        <div style="max-height: 180px; overflow-y: auto; margin: 10px 0;">
+            <table class="history-table" style="width:100%; border-collapse: collapse; font-size: 8px;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #3b2361; padding: 6px;">VENCEDOR</th>
+                        <th style="border: 1px solid #3b2361; padding: 6px;">PONTOS</th>
+                    </tr>
+                </thead>
+                <tbody id="modal-history-rows">
+                    <tr><td colspan="2" style="border: 1px solid #3b2361; padding: 6px;">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <button class="pixel-btn" onclick="configurarMenuConfiguracoes('menu')">[ VOLTAR ]</button>
+    `;
+
+    const tbody = document.getElementById("modal-history-rows");
+    if (!tbody || !usuarioLogadoEmail) return;
+
+    const { data, error } = await supabaseClient
+        .from("historico_partidas")
+        .select("*")
+        .eq("usuario_email", usuarioLogadoEmail)
+        .order("id", { ascending: false })
+        .limit(6);
+
+    if (error || !data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" style="border: 1px solid #3b2361; padding: 6px;">Nenhuma partida salva.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = data.map(partida => `
+        <tr>
+            <td style="border: 1px solid #3b2361; padding: 6px; text-align: center;">${escapeHtml(partida.vencedor ?? "—")}</td>
+            <td style="border: 1px solid #3b2361; padding: 6px; text-align: center;">${escapeHtml(String(partida.pontuacao ?? "—"))}</td>
+        </tr>
+    `).join("");
+}
+
+function abrirModalConfig() {
+    tocarClique();
+    const modal = document.getElementById("game-settings-modal");
+    if (modal) {
+        const mainView = document.getElementById("settings-main-view");
+        const confirmView = document.getElementById("settings-confirm-view");
+        if (mainView) {
+            mainView.classList.remove("hidden");
+            if (document.getElementById("screen-menu")?.classList.contains("active")) {
+                configurarMenuConfiguracoes("menu");
+            } else {
+                configurarMenuConfiguracoes("jogo");
+            }
+        }
+        if (confirmView) confirmView.classList.add("hidden");
+        modal.classList.remove("hidden");
+    }
+}
+
+function fecharModalConfig() {
+    tocarClique();
+    const modal = document.getElementById("game-settings-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+    }
+}
+
+function mostrarConfirmacaoSaida() {
+    tocarClique();
+    const modal = document.getElementById("game-settings-modal");
+    if (modal) modal.classList.remove("hidden");
+    const mainView = document.getElementById("settings-main-view");
+    const confirmView = document.getElementById("settings-confirm-view");
+    if (mainView) mainView.classList.add("hidden");
+    if (confirmView) confirmView.classList.remove("hidden");
+}
+
+function voltarMenuPrincipalConfig() {
+    tocarClique();
+    const mainView = document.getElementById("settings-main-view");
+    const confirmView = document.getElementById("settings-confirm-view");
+    if (confirmView) confirmView.classList.add("hidden");
+    if (mainView) mainView.classList.remove("hidden");
+}
+
+function retornarAoMenuPrincipal() {
+    tocarClique();
+    fecharModalConfig();
+    irParaTela("screen-menu");
+}
+
+/*LOGIN E HISTÓRICO*/
 async function fazerLogin() {
     tocarClique();
     iniciarMusicaFundo();
@@ -252,13 +415,6 @@ async function fazerLogin() {
     }
 
     usuarioLogadoEmail = email;
-
-    try {
-        await carregarHistorico();
-    } catch (error) {
-        console.warn("Não foi possível carregar o histórico:", error);
-    }
-
     irParaTela("screen-menu");
 }
 
@@ -271,51 +427,7 @@ function deslogar() {
     irParaTela("screen-login");
 }
 
-async function carregarHistorico() {
-    const tbody = document.getElementById("history-rows");
-
-    tbody.innerHTML = "";
-
-    const { data, error } = await supabaseClient
-        .from("historico_partidas")
-        .select("*")
-        .eq("usuario_email", usuarioLogadoEmail)
-        .order("id", { ascending: false })
-        .limit(4);
-
-    if (error) {
-        throw error;
-    }
-
-    if (data && data.length > 0) {
-        data.forEach(partida => {
-            const tr = document.createElement("tr");
-
-            const vencedor = document.createElement("td");
-            const pontuacao = document.createElement("td");
-
-            vencedor.textContent = partida.vencedor ?? "—";
-            pontuacao.textContent = String(partida.pontuacao ?? "—");
-
-            tr.appendChild(vencedor);
-            tr.appendChild(pontuacao);
-
-            tbody.appendChild(tr);
-        });
-    } else {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="2">Nenhuma partida salva.</td>
-            </tr>
-        `;
-    }
-}
-
-
-/* =========================================
-   CONFIGURAÇÃO DOS JOGADORES
-========================================= */
-
+/*CONFIGURAÇÃO DOS JOGADORES*/
 function iniciarConfiguracaoPersonagens() {
     totalPlayersCount = Number(
         document.getElementById("select-qtd-jogadores").value
@@ -455,11 +567,7 @@ function voltarEscolhaPersonagem() {
         ultimoJogador.name.toUpperCase();
 }
 
-
-/* =========================================
-   INÍCIO DE CADA RODADA
-========================================= */
-
+/* INÍCIO DE CADA RODADA */
 function iniciarNovaRodada(primeira = false) {
     if (primeira) {
         currentRound = 1;
@@ -489,18 +597,33 @@ function iniciarNovaRodada(primeira = false) {
     votePlayerIndex = 0;
     selectedVoteIndex = null;
 
+    roundResultType = null;
     guessSubmitted = false;
+
+    const guessInput = document.getElementById("impostor-guess");
+    if (guessInput) guessInput.value = "";
+
+    const guessFeedback = document.getElementById("guess-feedback");
+    if (guessFeedback) {
+        guessFeedback.innerText = "";
+        guessFeedback.className = "";
+    }
+
+    const wordReveal = document.getElementById("word-reveal");
+    if (wordReveal) wordReveal.classList.add("hidden");
+
+    const btnGuess = document.getElementById("btn-guess");
+    if (btnGuess) btnGuess.disabled = false;
+
+    const btnContinue = document.getElementById("btn-continue-round");
+    if (btnContinue) btnContinue.disabled = true;
 
     prepararRevelacaoJogador();
 
     irParaTela("screen-reveal");
 }
 
-
-/* =========================================
-   REVELAÇÃO PRIVADA DAS PALAVRAS
-========================================= */
-
+/* REVELAÇÃO PRIVADA DAS PALAVRAS*/
 function prepararRevelacaoJogador() {
     const player = selectedPlayersList[revealPlayerIndex];
 
@@ -546,11 +669,7 @@ function gerenciarCliqueRevelar() {
     }
 }
 
-
-/* =========================================
-   CONTAGEM REGRESSIVA
-========================================= */
-
+/*CONTAGEM REGRESSIVA*/
 function dispararContagemInicial() {
     document.getElementById("round-indicator").innerText =
         `RODADA ${currentRound} DE ${totalRounds}`;
@@ -583,11 +702,7 @@ function dispararContagemInicial() {
     }, 1000);
 }
 
-
-/* =========================================
-   SISTEMA DE VOTAÇÃO CORRIGIDO
-========================================= */
-
+/* SISTEMA DE VOTAÇÃO CORRIGIDO*/
 function abrirVotacao() {
     votos = [];
     votePlayerIndex = 0;
@@ -600,7 +715,7 @@ function abrirVotacao() {
 function atualizarTextoTelaPassar() {
     const player = selectedPlayersList[votePlayerIndex];
     if (!player) return;
-    
+
     const nomeMaiusculo = player.name.toUpperCase();
 
     const titleEl = document.getElementById("pass-voter-title-name");
@@ -610,7 +725,6 @@ function atualizarTextoTelaPassar() {
     if (boxEl) boxEl.innerText = nomeMaiusculo;
 }
 
-// Função vinculada ao botão "ESTOU COM O APARELHO"
 window.iniciarVotoDoJogadorAtual = function() {
     renderizarVotoAtual();
     irParaTela("screen-voting");
@@ -634,13 +748,13 @@ function renderizarVotoAtual() {
     title.textContent = `${player.name.toUpperCase()}, QUEM É O IMPOSTOR?`;
     content.appendChild(title);
 
-    const cards = document.createElement("div");
-    cards.className = "voting-cards";
-
-    // Filtra os outros jogadores e embaralha a ordem aleatoriamente
     let alvosDisponiveis = selectedPlayersList
         .map((target, index) => ({ target, index }))
         .filter(item => item.index !== votePlayerIndex);
+
+    const cards = document.createElement("div");
+    cards.className = "voting-cards";
+    cards.dataset.count = alvosDisponiveis.length;
 
     for (let i = alvosDisponiveis.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -697,6 +811,8 @@ function registrarVotoAtual() {
     const button = document.getElementById("btn-confirm-vote");
     if (button) button.disabled = true;
 
+    selectedPlayersList[votePlayerIndex].votoAtual = selectedVoteIndex;
+
     votos.push({
         voter: votePlayerIndex,
         target: selectedVoteIndex
@@ -712,105 +828,87 @@ function registrarVotoAtual() {
     }
 }
 
-/* =========================================
-   RESULTADO DA VOTAÇÃO E PONTUAÇÃO
-========================================= */
-
+/*LÓGICA DE PONTUAÇÃO (ATUALIZADA)*/
 function calcularResultadoVotacao() {
-    const counts = selectedPlayersList.map((player, index) => {
-        return votos.filter(vote => vote.target === index).length;
+    const totalJogadores = selectedPlayersList.length;
+    const votosContagem = {};
+
+    selectedPlayersList.forEach(p => {
+        const votadoId = p.votoAtual;
+        if (votadoId !== undefined && votadoId !== null) {
+            votosContagem[votadoId] = (votosContagem[votadoId] || 0) + 1;
+        }
     });
 
-    const maxVotes = Math.max(...counts);
-
-    const leaders = counts
-        .map((count, index) => count === maxVotes ? index : -1)
-        .filter(index => index >= 0);
-
-    const needed = Math.floor(selectedPlayersList.length / 2) + 1;
-
-    const majority =
-        leaders.length === 1 &&
-        leaders[0] === indiceImpostorSorteado &&
-        maxVotes >= needed;
-
-    const pointLines = [];
-
-    const impostor = selectedPlayersList[indiceImpostorSorteado];
-
-    if (majority) {
-        votos
-            .filter(vote => vote.target === indiceImpostorSorteado)
-            .forEach(vote => {
-                selectedPlayersList[vote.voter].score += 4;
-
-                pointLines.push(
-                    `${selectedPlayersList[vote.voter].name}: +4 pontos`
-                );
-            });
-
-    } else {
-        impostor.score += 5;
-
-        pointLines.push(
-            `${impostor.name} (Impostor): +5 pontos`
-        );
+    let maxVotos = -1;
+    let maisVotados = [];
+    for (const [id, count] of Object.entries(votosContagem)) {
+        if (count > maxVotos) {
+            maxVotos = count;
+            maisVotados = [Number(id)];
+        } else if (count === maxVotos) {
+            maisVotados.push(Number(id));
+        }
     }
 
-    /*
-       IMPORTANTE:
-       A palavra dos desenvolvedores NÃO é mostrada aqui.
-       Ela só será exibida depois do envio do palpite.
-    */
+    const houveEmpate = maisVotados.length > 1;
+    const maisVotadoId = maisVotados.length === 1 ? maisVotados[0] : null;
 
-    document.getElementById("round-result-text").innerHTML = `
-        <p>IMPOSTOR IDENTIFICADO:</p>
-        <h2>${escapeHtml(impostor.name)}</h2>
+    const maioriaNecessaria = Math.floor(totalJogadores / 2) + 1;
+    const impostorachado =
+        !houveEmpate &&
+        maisVotadoId === indiceImpostorSorteado &&
+        (votosContagem[indiceImpostorSorteado] || 0) >= maioriaNecessaria;
 
-        <p>MAIOR NÚMERO DE VOTOS: ${maxVotes}</p>
+    const impostor = selectedPlayersList[indiceImpostorSorteado];
+    const resultBox = document.getElementById("round-result-text");
+    const pointsBox = document.getElementById("round-points");
+    let pontosLinhas = [];
 
-        <p class="${majority ? "text-success" : "text-danger"}">
-            ${
-                majority
-                    ? "A MAIORIA DESCOBRIU O IMPOSTOR!"
-                    : "A MAIORIA NÃO IDENTIFICOU O IMPOSTOR."
+    if (impostorachado) {
+        selectedPlayersList.forEach((p, idx) => {
+            if (idx !== indiceImpostorSorteado && p.votoAtual === indiceImpostorSorteado) {
+                p.score += 4;
+                pontosLinhas.push(`<p>${escapeHtml(p.name)}: +4 pontos por acertar o voto.</p>`);
             }
-        </p>
-    `;
+        });
+        roundResultType = "caught";
+        if (resultBox) {
+            resultBox.innerHTML = `<p>O IMPOSTOR ERA:</p><h2>${escapeHtml(impostor.name.toUpperCase())}</h2><p class="text-success">A MAIORIA DESCOBRIU O IMPOSTOR!</p>`;
+        }
+    } else {
+        selectedPlayersList[indiceImpostorSorteado].score += 5;
+        pontosLinhas.push(`<p>${escapeHtml(impostor.name)}: +5 pontos por escapar da maioria.</p>`);
 
-    document.getElementById("round-points").innerHTML = `
-        <p class="points-title">PONTOS DA VOTAÇÃO</p>
-        ${pointLines.map(line => `<p>${escapeHtml(line)}</p>`).join("")}
-    `;
+        selectedPlayersList.forEach((p, idx) => {
+            if (idx !== indiceImpostorSorteado && p.votoAtual === indiceImpostorSorteado) {
+                p.score += 2;
+                pontosLinhas.push(`<p>${escapeHtml(p.name)}: +2 pontos pelo voto certeiro.</p>`);
+            }
+        });
+        roundResultType = "escaped";
+        if (resultBox) {
+            resultBox.innerHTML = `<p>O IMPOSTOR ERA:</p><h2>${escapeHtml(impostor.name.toUpperCase())}</h2><p class="text-danger">O IMPOSTOR ENGANOU A MAIORIA!</p>`;
+        }
+    }
 
-    document.getElementById("impostor-guess").value = "";
-
-    document.getElementById("guess-feedback").innerText = "";
-
-    document.getElementById("word-reveal").classList.add("hidden");
-
-    document.getElementById("revealed-dev-word").innerText = "";
-
-    document.getElementById("btn-guess").disabled = false;
-
-    document.getElementById("btn-continue-round").disabled = true;
-
-    guessSubmitted = false;
+    if (pointsBox) {
+        pointsBox.innerHTML =
+            `<p class="points-title">PONTOS DA RODADA</p>` +
+            (pontosLinhas.length ? pontosLinhas.join("") : `<p>Nenhum ponto distribuído nesta etapa.</p>`);
+    }
 
     irParaTela("screen-result");
 }
 
-
-/* =========================================
-   PALPITE DO IMPOSTOR
-========================================= */
-
+/* PALPITE DO IMPOSTOR */
 function enviarPalpiteImpostor() {
     if (guessSubmitted) return;
 
     const input = document.getElementById("impostor-guess");
+    if (!input) return;
 
-    const guess = input.value.trim().toLocaleUpperCase("pt-BR");
+    const guess = input.value.trim();
 
     if (!guess) {
         alert("Digite seu palpite.");
@@ -837,40 +935,39 @@ function enviarPalpiteImpostor() {
     if (acertou) {
         impostor.score += 3;
 
-        feedback.innerText = "ACERTOU! +3 PONTOS EXTRAS.";
+        if (feedback) {
+            feedback.innerText = "ACERTOU! +3 PONTOS EXTRAS.";
+            feedback.className = "text-success";
+        }
 
-        feedback.className = "text-success";
-
-        document.getElementById("round-points").innerHTML += `
-            <p>${escapeHtml(impostor.name)}: +3 pontos pelo palpite correto.</p>
-        `;
+        const roundPoints = document.getElementById("round-points");
+        if (roundPoints) {
+            roundPoints.innerHTML += `
+                <p>${escapeHtml(impostor.name)}: +3 pontos pelo palpite correto.</p>
+            `;
+        }
 
     } else {
-        feedback.innerText = "NÃO FOI DESSA VEZ!";
-
-        feedback.className = "text-danger";
+        if (feedback) {
+            feedback.innerText = "NÃO FOI DESSA VEZ!";
+            feedback.className = "text-danger";
+        }
     }
 
-    /*
-       A palavra é revelada somente agora,
-       depois que o impostor enviou o palpite.
-    */
+    const devWordEl = document.getElementById("revealed-dev-word");
+    if (devWordEl) devWordEl.innerText = parPalavrasAtual.dev;
 
-    document.getElementById("revealed-dev-word").innerText =
-        parPalavrasAtual.dev;
+    const wordRevealEl = document.getElementById("word-reveal");
+    if (wordRevealEl) wordRevealEl.classList.remove("hidden");
 
-    document.getElementById("word-reveal").classList.remove("hidden");
+    const btnGuess = document.getElementById("btn-guess");
+    if (btnGuess) btnGuess.disabled = true;
 
-    document.getElementById("btn-guess").disabled = true;
-
-    document.getElementById("btn-continue-round").disabled = false;
+    const btnContinue = document.getElementById("btn-continue-round");
+    if (btnContinue) btnContinue.disabled = false;
 }
 
-
-/* =========================================
-   PLACAR
-========================================= */
-
+/* PLACAR*/
 function continuarAposRodada() {
     if (!guessSubmitted) return;
 
@@ -916,13 +1013,36 @@ function iniciarProximaRodada() {
     iniciarNovaRodada(false);
 }
 
+/* ENCERRAMENTO DO CAMPEONATO*/
+async function salvarHistorico(winner) {
+    if (!usuarioLogadoEmail || !winner) return;
 
-/* =========================================
-   ENCERRAMENTO DO CAMPEONATO (CORRIGIDO)
-========================================= */
+    const { error } = await supabaseClient
+        .from("historico_partidas")
+        .insert([
+            {
+                usuario_email: usuarioLogadoEmail,
+                vencedor: winner.name,
+                pontuacao: winner.score
+            }
+        ]);
+
+    if (error) {
+        throw error;
+    }
+}
 
 window.encerrarCampeonato = async function() {
+    if (isSaving) return;
     if (!selectedPlayersList || selectedPlayersList.length === 0) return;
+
+    const btnFinalizar = document.getElementById("btn-finish-match");
+    if (btnFinalizar) {
+        btnFinalizar.disabled = true;
+        btnFinalizar.innerText = "SALVANDO...";
+    }
+
+    isSaving = true;
 
     const highestScore = Math.max(
         ...selectedPlayersList.map(player => player.score)
@@ -932,14 +1052,12 @@ window.encerrarCampeonato = async function() {
         .filter(player => player.score === highestScore)
         .sort((a, b) => a.name.localeCompare(b.name))[0];
 
-    // Tenta salvar no histórico, mas garante que a tela abra mesmo se falhar
     try {
         await salvarHistorico(winner);
     } catch (error) {
         console.warn("Erro ao salvar histórico, prosseguindo para a tela de vencedor:", error);
     }
 
-    // Preenche e exibe a tela de vencedor
     const nameEl = document.getElementById("winner-name-display");
     const scoreEl = document.getElementById("winner-score-display");
 
@@ -947,29 +1065,19 @@ window.encerrarCampeonato = async function() {
     if (scoreEl) scoreEl.innerText = `${winner.score} PONTOS`;
 
     irParaTela("screen-winner");
+
+    isSaving = false;
+    if (btnFinalizar) {
+        btnFinalizar.disabled = false;
+        btnFinalizar.innerText = "FINALIZAR E SALVAR";
+    }
 };
 
-/* =========================================
-   OUTRAS FUNÇÕES
-========================================= */
-
+/* OUTRAS FUNÇÕES E UTILITÁRIOS*/
 function confirmarSaidaPartida() {
-    if (
-        confirm("Deseja sair? O campeonato atual será perdido.")
-    ) {
+    if (confirm("Deseja sair? O campeonato atual será perdido.")) {
         irParaTela("screen-menu");
     }
-}
-
-function toggleLogs() {
-    const container = document.getElementById("logs-container");
-
-    const arrow = document.getElementById("log-arrow");
-
-    container.classList.toggle("show");
-
-    arrow.innerText =
-        container.classList.contains("show") ? "▲" : "▼";
 }
 
 function escapeHtml(value) {
@@ -982,11 +1090,7 @@ function escapeHtml(value) {
     })[character]);
 }
 
-
-/* =========================================
-   EFEITO MATRIX
-========================================= */
-
+/*EFEITO MATRIX*/
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("matrix-canvas");
 
@@ -1048,11 +1152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(drawMatrix, 90);
 });
 
-
-/* =========================================
-   SOM DE CLIQUE
-========================================= */
-
+/* SOM DE CLIQUE GLOBAL*/
 document.addEventListener("click", event => {
     if (event.target.closest("button")) {
         tocarClique();
